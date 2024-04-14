@@ -5,20 +5,21 @@ import requests
 import asyncio
 import aiohttp
 from proxy import *
+import time
 from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-
+from selenium.webdriver.support.ui import Select
 
 asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
-# headers = {
-#     # 'Accept': '*/*',
-#     'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,'
-#               'application/signed-exchange;v=b3;q=0.7',
-#     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) '
-#                   'Chrome/120.0.0.0 YaBrowser/24.1.0.0 Safari/537.36'
-# }
+headers = {
+    # 'Accept': '*/*',
+    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,'
+              'application/signed-exchange;v=b3;q=0.7',
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) '
+                  'Chrome/120.0.0.0 YaBrowser/24.1.0.0 Safari/537.36'
+}
 
 
 def main():
@@ -93,17 +94,21 @@ def main():
     # print(response.status_code)
     # print(response.content)
 
-    options = webdriver.ChromeOptions()
-    # options.add_argument("--start-maximized")
-    # options.add_argument("--headless")
-    browser = webdriver.Chrome(options=options)
-    browser.get('http://free-proxy.cz/ru/proxylist/country/all/http/uptime/all')
-    element = browser.find_element(By.ID, 'clickexport')
-    element.click()
-    generated_html = browser.page_source
-    print(generated_html)
-    browser.quit()
-    # with open('free-proxy.html', 'w', encoding='utf-8') as f:
+    # options = webdriver.ChromeOptions()
+    # # options.add_argument("--start-maximized")
+    # # options.add_argument("--headless")
+    # options.headless = True
+    # browser = webdriver.Chrome(options=options)
+    # # browser.get('http://free-proxy.cz/ru/proxylist/country/all/http/uptime/all')
+    # browser.get('https://spys.one/en/free-proxy-list/')
+    # # select = Select(browser.find_element(By.ID, 'xpp'))
+    # # select.select_by_value('5')
+    # # element = browser.find_element(By.ID, 'clickexport')
+    # # element.click()
+    # generated_html = browser.page_source
+    # # print(generated_html)
+    # browser.quit()
+    # with open('proxies.html', 'w', encoding='utf-8') as f:
     #     f.write(generated_html)
     # soup = BeautifulSoup(generated_html, 'lxml')
     # list_proxy = [soup.find('div', id='zkzk').find('br').previousSibling]
@@ -118,11 +123,15 @@ def main():
     # with open('url_list.json', 'w', encoding='utf-8') as f:
     #     json.dump({el: '' for el in list_proxy}, f, ensure_ascii=False, indent=4)
 
-    # with open('url_list.json', 'r', encoding='utf-8') as f:
-    #     list_proxy = list(json.loads(f.read()))
+    # responce = requests.get('https://spys.me/proxy.txt')
+    # list_proxy = re.findall(r'\b\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3}:\d{1,5}\b', responce.text)
     # proxy = Proxy()
     # proxy.proxy_list = list_proxy
     # proxy.check_proxy_list()
+    # with open('url_list.json', 'r', encoding='utf-8') as f:
+    #     list_proxy = list(json.loads(f.read()))
+
+    print(Proxy().proxy_list)
 
 
 if __name__ == '__main__':
