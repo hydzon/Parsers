@@ -1,4 +1,5 @@
 import json
+import random
 import time
 import requests
 import asyncio
@@ -23,6 +24,9 @@ class Proxy:
     def check_proxy_list(self):
         asyncio.run(self.async_check_proxy_list())
         print('Proxy list checked')
+
+    def get_random_proxy(self):
+        return random.choice(self.proxy_list)
 
     async def async_check_proxy(self, proxy_url):
         try:
