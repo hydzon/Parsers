@@ -1,6 +1,5 @@
 import aiohttp
 from bs4 import BeautifulSoup
-
 from proxy import *
 import requests
 import json
@@ -51,17 +50,29 @@ def main():
 
     # url = f"https://www.list-org.com/company/2"
     # url = f'https://www.google.com'
-    url = 'https://httpbin.org/ip'
+    check_urls = ['https://httpbin.org/ip', 'https://icanhazip.com', 'https://api.seeip.org/jsonip']
 
     # # async_main()
     # response = requests.get(url, proxies={'http': 'socks5://' + '5.59.141.94:1080',
     #                                       'https': 'socks5://' + '5.59.141.94:1080'})
-    session = requests.Session()
-    session.proxies = {
-        'http': 'http://85.172.0.30:8080',
-        'https': 'http://79.111.15.125:8080'
+    # session = requests.Session()
+    # session.proxies = {
+    #     'http': 'http://78.29.33.173:8080',
+    #     'https': 'http://78.29.33.173:8080'
+    #     # 'socks4': 'http://184.181.217.220:4145',
+    #     # 'socks5': 'http://184.181.217.220:4145'
+    # }
+    # response = session.get(check_urls[0])
+
+    proxy_url = '95.84.166.138:8080'
+    proxies = {
+        'http': 'http://' + proxy_url,
+        'https': 'http://' + proxy_url,
     }
-    response = session.get(url)
+    response = requests.get('https://icanhazip.com',
+                            headers=headers,
+                            proxies=proxies,
+                            timeout=20)
     print(response.url)
     print(response.text)
 

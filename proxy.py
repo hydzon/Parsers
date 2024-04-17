@@ -5,8 +5,9 @@ import requests
 import asyncio
 import re
 import os
-
 from bs4 import BeautifulSoup
+
+asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
 
 class Proxy:
@@ -41,35 +42,38 @@ class Proxy:
                 json.dump(dict_proxies, f, ensure_ascii=False, indent=4)
 
     def check_proxy_list(self):
-        asyncio.run(self.async_check_proxy_list())
+        asyncio.run(self.__async_check_proxy_list())
         print('Proxy list checked')
 
-    def get_random_proxy(self):
-        return random.choice(self.proxy_list)
+    async def __async_check_proxy_list(self):
+        task_list = []
+        for proxy in self.proxy_list:
+            task_list.append(asyncio.create_task(self.__async_check_proxy(proxy)))
+        await asyncio.gather(*task_list)
 
     @staticmethod
-    async def async_check_proxy(self, proxy_url):
+    async def __async_check_proxy(proxy_url):
         try:
             response = await asyncio.to_thread(requests.get,
-                                    'https://www.google.com',
-                                    proxies={"http://": "http://" + proxy_url},
+                                    'https://icanhazip.com',
+                                    proxies={"http://": "http://" + proxy_url, "https://": "http://" + proxy_url},
                                     timeout=10)
+
         except IOError:
             print(f'{proxy_url}: IOError')
         except Exception:
             print(f'{proxy_url}: ERROR CONNECT')
         else:
-            print(f'{proxy_url}: {response.status_code}')
+            print(f'{proxy_url}  ->  {response.text}')
 
-    async def async_check_proxy_list(self):
-        task_list = []
-        for proxy in self.proxy_list:
-            task_list.append(asyncio.create_task(self.async_check_proxy(proxy)))
-        await asyncio.gather(*task_list)
+    def get_random_proxy(self):
+        return random.choice(self.proxy_list)
 
 
 def main():
-    print(len(Proxy().proxy_list))
+    proxy = Proxy()
+    proxy.check_proxy_list()
+    # print(*Proxy().proxy_list, sep='\n')
 
 
 if __name__ == '__main__':
